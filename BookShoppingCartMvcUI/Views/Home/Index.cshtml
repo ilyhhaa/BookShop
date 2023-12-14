@@ -1,9 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+   
    
 }
 
-<div class="text-center">
-    <h1 class="display-4">Это вызывает конструктор индекс.сштмл</h1>
-   
+<div class="my-2">
+        <form class="row row-cols-lg-auto g-3 align-items-center">
+ 
+  <div class="col-12">
+    <label class="visually-hidden" for="inlineFormSelectPref">Categories</label>
+    <select class="form-select" id="genreId">
+      <option selected>Choose...</option>
+      <option value="1">First Category</option>
+      <option value="2">Second Category</option>
+      <option value="3">Third Category</option>
+                <option value="4">Fourth Category</option>
+    </select>
+  </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="inlineFormInputGroupUsername">Search by Title</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" id="" placeholder="Search by Title">
+            </div>
+        </div>
+
+
+
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+</div>
+
+<div class="w-20 mt-4 d-flex flex-wrap"
+@for(int i = 1; i <= 4; i++){
+<div class="card mx-2 mb-4" style="width: 22rem;">
+            <img src="https://global.discourse-cdn.com/business7/uploads/glideapps/original/2X/4/4936e0f28f79c8a2aa95582741091356d0ed61d8.jpeg" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">Anything</h5>
+        <p class="card-text">Something about anything</p>
+        <a href="#" class="btn btn-primary">Add to cart.</a>
+    </div>
+</div>}
 </div>
