@@ -12,6 +12,11 @@ namespace BookShoppingCartMvcUI.Models
         [MaxLength(40)]
         public string? BookName { get; set; }
 
+
+        [Required] //свойство должно быть обязательно установлено
+        [MaxLength(40)]
+        public string? AuthorName { get; set; }
+
         [Required]
         public double Price { get; set; }
         
@@ -26,5 +31,7 @@ namespace BookShoppingCartMvcUI.Models
 
         public List<CartDetail> CartDetail { get; set; }
 
+        [NotMapped]
+        public string GenreName { get; set; }
     }
 }
