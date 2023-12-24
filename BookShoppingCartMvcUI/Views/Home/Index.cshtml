@@ -38,7 +38,7 @@
 
 <div class="w-20 mt-4 d-flex flex-wrap"
 @foreach(var book in Model.Books){
-<div class="card mx-2 mb-4" style="width: 22rem;">
+<div class="card mx-2 mb-3" style="width:21rem;">
              @if(string.IsNullOrEmpty(book.Image)){
                                                
                  <img src="/images/NoImage.jpg" class="card-img-top" alt="...">
@@ -51,15 +51,14 @@
     <div class="card-body">
         <h5 class="card-title">@book.BookName</h5>
         <p class="card-text">
-               Genre:@book.GenreName;
+                       <br /> <b>Genre:</b>@book.GenreName
+    ;
+                       <br /> <b>Author:</b>@book.AuthorName;
+                          
+                       <br /> <b>Price:</b>@book.Price;
             
             </p>
-            <p>
-                    Author:@book.AuthorName;
-            </p>
-            <p>
-                    Price:@book.Price;
-            </p>
+            
         <a href="#" class="btn btn-primary">Add to cart.</a>
     </div>
 </div>}
