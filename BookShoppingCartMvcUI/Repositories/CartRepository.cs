@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace BookShoppingCartMvcUI.Repositories
 {
-    public class CartRepository
+    public class CartRepository : ICartRepository
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
@@ -15,7 +15,7 @@ namespace BookShoppingCartMvcUI.Repositories
             _userManager = userManager;
             _httpcontextAccessor = HttpcontextAccessor;
         }
-        public  async Task<bool> AddItem(int bookId,int qty)
+        public async Task<bool> AddItem(int bookId, int qty)
         {
             using var transaction = _db.Database.BeginTransaction();
             try {
@@ -36,18 +36,18 @@ namespace BookShoppingCartMvcUI.Repositories
                     _db.ShoppingCarts.Add(cart);
                 }
                 _db.SaveChanges();
-                var cartItem = _db.CartDetails.FirstOrDefault(x => x.ShoppingCartId ==cart.Id && x.BookId==bookId);
+                var cartItem = _db.CartDetails.FirstOrDefault(x => x.ShoppingCartId == cart.Id && x.BookId == bookId);
                 if (cartItem is not null)
                 {
                     cartItem.Quantity += qty;
                 }
                 else
                 {
-                    cartItem = new CartDetail 
+                    cartItem = new CartDetail
                     {
                         BookId = bookId,
-                        ShoppingCartId=cart.Id,
-                        Quantity=qty
+                        ShoppingCartId = cart.Id,
+                        Quantity = qty
                     };
 
                     _db.CartDetails.Add(cartItem);
@@ -79,14 +79,14 @@ namespace BookShoppingCartMvcUI.Repositories
                 {
                     return false;
                 }
-                
+
                 var cartItem = _db.CartDetails.FirstOrDefault(x => x.ShoppingCartId == cart.Id && x.BookId == bookId);
-                
-                if(cartItem is null)
+
+                if (cartItem is null)
                 {
                     return false;
                 }
-                
+
                 else if (cartItem.Quantity == 1)
                 {
                     _db.CartDetails.Remove(cartItem);
@@ -96,10 +96,10 @@ namespace BookShoppingCartMvcUI.Repositories
                     cartItem.Quantity = cartItem.Quantity - 1;
 
 
-                   
+
                 }
                 _db.SaveChanges();
-                transaction.Commit();
+                //transaction.Commit();
                 return true;
             }
             catch (Exception ex)
@@ -107,6 +107,23 @@ namespace BookShoppingCartMvcUI.Repositories
                 return false;
             }
         }
+
+        public async Task<IEnumerable<ShoppingCart>>GetUserCart()
+        {
+            var userId = GetUserId();
+
+            if(userId == null)
+            {
+                throw new Exception("Invalid userid");
+            }
+            var shoppingCart = await _db.ShoppingCarts
+                                       .Include(x => x.CartsDetails)
+                                       .ThenInclude(x => x.Book)
+                                       .ThenInclude(x => x.Genre)
+                                       .Where(a => a.UserId == userId).ToListAsync();
+            return shoppingCart;
+        }
+
 
         private async Task<ShoppingCart> GetCart(string userId) 
         {
