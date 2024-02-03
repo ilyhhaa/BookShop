@@ -53,6 +53,53 @@ namespace BookShoppingCartMvcUI.Repositories
                     _db.CartDetails.Add(cartItem);
                 }
                 _db.SaveChanges();
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> RemoveItem(int bookId)
+        {
+            using var transaction = _db.Database.BeginTransaction();
+            try
+            {
+                string userId = GetUserId();
+
+                if (string.IsNullOrEmpty(userId))
+                    return false;
+
+
+
+                var cart = await GetCart(userId);
+                if (cart is null)
+                {
+                    return false;
+                }
+                
+                var cartItem = _db.CartDetails.FirstOrDefault(x => x.ShoppingCartId == cart.Id && x.BookId == bookId);
+                
+                if(cartItem is null)
+                {
+                    return false;
+                }
+                
+                else if (cartItem.Quantity == 1)
+                {
+                    _db.CartDetails.Remove(cartItem);
+                }
+                else
+                {
+                    cartItem.Quantity = cartItem.Quantity - 1;
+
+
+                   
+                }
+                _db.SaveChanges();
+                transaction.Commit();
                 return true;
             }
             catch (Exception ex)
