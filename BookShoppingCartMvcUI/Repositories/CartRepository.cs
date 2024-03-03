@@ -15,14 +15,15 @@ namespace BookShoppingCartMvcUI.Repositories
             _userManager = userManager;
             _httpcontextAccessor = HttpcontextAccessor;
         }
-        public async Task<bool> AddItem(int bookId, int qty)
+        public async Task<int> AddItem(int bookId, int qty)
         {
+            string userId = GetUserId();
             using var transaction = _db.Database.BeginTransaction();
             try {
-                string userId = GetUserId();
+                
 
                 if (string.IsNullOrEmpty(userId))
-                    return false;
+                    throw new Exception("user is not logged-in");
 
 
 
@@ -54,37 +55,41 @@ namespace BookShoppingCartMvcUI.Repositories
                 }
                 _db.SaveChanges();
                 transaction.Commit();
-                return true;
+                
             }
             catch (Exception ex)
             {
-                return false;
+                
             }
+            var cartItemCount = await GetCartItemCount(userId);
+            return cartItemCount;
         }
 
-        public async Task<bool> RemoveItem(int bookId)
+        public async Task<int> RemoveItem(int bookId)
         {
+          
             using var transaction = _db.Database.BeginTransaction();
+            string userId = GetUserId();
             try
             {
-                string userId = GetUserId();
+
 
                 if (string.IsNullOrEmpty(userId))
-                    return false;
+                    throw new Exception("User is not loggged-in");
 
 
 
                 var cart = await GetCart(userId);
                 if (cart is null)
                 {
-                    return false;
+                    throw new Exception("Invaalid cart");
                 }
 
                 var cartItem = _db.CartDetails.FirstOrDefault(x => x.ShoppingCartId == cart.Id && x.BookId == bookId);
 
                 if (cartItem is null)
                 {
-                    return false;
+                    throw new Exception("Not items in cart ");
                 }
 
                 else if (cartItem.Quantity == 1)
@@ -100,12 +105,15 @@ namespace BookShoppingCartMvcUI.Repositories
                 }
                 _db.SaveChanges();
                 //transaction.Commit();
-                return true;
+              
             }
             catch (Exception ex)
             {
-                return false;
+                
             }
+            var cartItemCount = await GetCartItemCount(userId);
+            return cartItemCount;
+
         }
 
         public async Task<IEnumerable<ShoppingCart>>GetUserCart()
@@ -132,7 +140,7 @@ namespace BookShoppingCartMvcUI.Repositories
         }
         
         
-        private async Task<int> GetCartItemCount(string userid="")
+        public async Task<int> GetCartItemCount(string userid="")
         {
 
             if (!string.IsNullOrEmpty(userid))
