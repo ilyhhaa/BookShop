@@ -130,6 +130,23 @@ namespace BookShoppingCartMvcUI.Repositories
             var cart = await _db.ShoppingCarts.FirstOrDefaultAsync(x => x.UserId == userId);
             return cart;
         }
+        
+        
+        private async Task<int> GetCartItemCount(string userid="")
+        {
+
+            if (!string.IsNullOrEmpty(userid))
+            {
+                userid= GetUserId();
+            }
+            var data = await (from cart in _db.ShoppingCarts
+                              join CartDetail in _db.CartDetails
+                              on cart.Id equals CartDetail.ShoppingCartId
+                              select new { CartDetail.Id }
+                              ).ToListAsync();
+            return data.Count;
+        }
+        
         private string GetUserId()
         {
             ClaimsPrincipal principal = _httpcontextAccessor.HttpContext.User;
