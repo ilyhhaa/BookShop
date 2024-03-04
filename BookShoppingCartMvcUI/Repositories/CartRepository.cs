@@ -133,7 +133,7 @@ namespace BookShoppingCartMvcUI.Repositories
         }
 
 
-        private async Task<ShoppingCart> GetCart(string userId) 
+        public async Task<ShoppingCart> GetCart(string userId) 
         {
             var cart = await _db.ShoppingCarts.FirstOrDefaultAsync(x => x.UserId == userId);
             return cart;
