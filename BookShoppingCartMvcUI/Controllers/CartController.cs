@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShoppingCartMvcUI.Controllers
@@ -13,24 +13,32 @@ namespace BookShoppingCartMvcUI.Controllers
             _cartRepo = cartRepo;
         }
 
-        public IActionResult AddItem(int bookId,int qty=1 )
+        public async Task<IActionResult> AddItem(int bookId,int qty=1,int redirect=0)
         {
-            return View();
+            var cartCount = await _cartRepo.AddItem(bookId, qty);
+            if (redirect==0)
+            return Ok(cartCount);
+
+            return RedirectToAction("GetUserCart");
+        }
+        
+        public async Task <IActionResult> RemoveItem(int bookId)
+        {
+           var cartCount = await _cartRepo.RemoveItem(bookId);
+
+            return RedirectToAction("GetUserCart");
         }
 
-        public IActionResult RemoveItem(int bookId)
+        public async Task<IActionResult> GetUserCart()
         {
-            return View();
+            var cart = _cartRepo.GetUserCart();
+            return View(cart);
         }
 
-        public IActionResult GetUserCart()
+        public async Task<IActionResult> GetTotalItemInCart()
         {
-            return View();
-        }
-
-        public IActionResult GetTotalItemInCart()
-        {
-            return View();
+            int cartItem = await _cartRepo.GetCartItemCount();
+            return Ok(cartItem);
         }
     }
 }
