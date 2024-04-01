@@ -59,7 +59,28 @@
             
             </p>
             
-        <a href="#" class="btn btn-primary">Add to cart.</a>
+       <button type="button" onclick="add(@book.Id)" class="btn btn-primary">Add to cart.</button>
     </div>
 </div>}
 </div>
+@* *@
+@section Scripts{
+    <script>
+        alert("Hello");
+        async function add(bookId){
+            try {
+                var response = await fetch(`/test/AddItem?bookId=${bookId}`);
+                if (response.status == 200) { }
+                var result = await response.json();
+                console.log(result);
+                var cartCountEl = document.getElementById({ "cartCount"});
+                cartCountEl.innerHTML = result;
+            }
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+    </script>
+    
+}
