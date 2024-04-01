@@ -116,7 +116,7 @@ namespace BookShoppingCartMvcUI.Repositories
 
         }
 
-        public async Task<IEnumerable<ShoppingCart>>GetUserCart()
+        public async Task<ShoppingCart>GetUserCart()
         {
             var userId = GetUserId();
 
@@ -128,7 +128,7 @@ namespace BookShoppingCartMvcUI.Repositories
                                        .Include(x => x.CartsDetails)
                                        .ThenInclude(x => x.Book)
                                        .ThenInclude(x => x.Genre)
-                                       .Where(a => a.UserId == userId).ToListAsync();
+                                       .Where(a => a.UserId == userId).FirstOrDefaultAsync();
             return shoppingCart;
         }
 
