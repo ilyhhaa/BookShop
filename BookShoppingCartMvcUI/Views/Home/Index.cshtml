@@ -69,7 +69,7 @@
         alert("Hello");
         async function add(bookId){
             try {
-                var response = await fetch(`/test/AddItem?bookId=${bookId}`);
+                var response = await fetch(`/Cart/AddItem?bookId=${bookId}`);
                 if (response.status == 200) { }
                 var result = await response.json();
                 console.log(result);
