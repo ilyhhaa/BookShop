@@ -1,0 +1,52 @@
+﻿@model ShoppingCart
+@{
+    ViewData["Title"] = "GetUserCart";
+}
+
+<div style="width:90%;margin:auto">
+    @if (Model != null && Model.CartsDetails != null && Model.CartsDetails.Count != 0)
+    {
+
+
+        <h3>My Cart</h3>
+
+        <table class="table-bordered">
+            <tr>
+                <th>Book</th>
+                <th>Image</th>
+                <th>Genre</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var item in Model.CartsDetails)
+            {
+                <tr>
+                    <td>@item.Book.BookName</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Book.Image))
+                        {
+                            <img src="/images/NoImage.jpg" style="width:800px;height:100px" />
+                        }
+                        else
+                        {
+                            <img src="/images/@item.Book.Image" style="width:800px;height:100px" />
+
+                        }
+                    </td>
+
+                    <td>@item.Book.Genre.GenreName</td>
+                    <td>@item.Book.Price</td>
+                    
+                </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <h5>Cart is Empty</h5>
+    }
+
+</div>
