@@ -158,7 +158,7 @@ namespace BookShoppingCartMvcUI.Repositories
             return data.Count;
         }
         
-        public async Task DoCheck()
+        public async Task<bool> DoCheck()
         {
             using var transaction = _db.Database.BeginTransaction();
 
@@ -196,7 +196,18 @@ namespace BookShoppingCartMvcUI.Repositories
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
                     };
+                    _db.OrderDetails.Add(orderDetail);
+
                 }
+                _db.SaveChanges();
+
+                _db.CartDetails.RemoveRange(cartDetail);
+                _db.SaveChanges();
+
+                transaction.Commit();
+
+                return  true;
+
 
             }
             catch (Exception)
