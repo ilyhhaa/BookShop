@@ -21,7 +21,14 @@ namespace BookShoppingCartMvcUI.Repositories
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
                 throw new Exception("User is not logged in");
-            var orders = await _db.Orders.Include(a=>a.OrderDetail).ThenInclude(a=>a.Book).ThenInclude(a=>a.Genre).Where(c=>c.UserId==userId).ToListAsync();
+
+            var orders = await _db.Orders
+                 .Include(x => x.OrderDetail)
+                 .ThenInclude(x => x.Book)
+                 .ThenInclude(x => x.Genre)
+                 .Where(a => a.UserId == userId)
+                 .ToListAsync();
+                
             return orders;
         }
 
