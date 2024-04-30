@@ -23,6 +23,7 @@ namespace BookShoppingCartMvcUI.Repositories
                 throw new Exception("User is not logged in");
 
             var orders = await _db.Orders
+                 .Include(x=>x.OrderStatus)
                  .Include(x => x.OrderDetail)
                  .ThenInclude(x => x.Book)
                  .ThenInclude(x => x.Genre)
