@@ -32,6 +32,7 @@ namespace BookShoppingCartMvcUI.Models
         public string Address { get; set; }
 
         [Required]
+        [MaxLength(30)]
         public string PaymentMethod { get; set; }
         public OrderStatus OrderStatus { get; set; }
 
