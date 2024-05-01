@@ -17,6 +17,22 @@ namespace BookShoppingCartMvcUI.Models
         public int OrderStatusId { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        [Required]
+        [MaxLength(30)]
+        public string? Name { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string? Email { get; set; }
+        [Required]
+        public string MobileNumber { get; set; }
+        [Required]
+        [MaxLength(200)]
+        public string Address { get; set; }
+
+        [Required]
+        public string PaymentMethod { get; set; }
         public OrderStatus OrderStatus { get; set; }
 
          public List<OrderDetail> OrderDetail { get; set; }
