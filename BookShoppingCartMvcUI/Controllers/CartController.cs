@@ -43,10 +43,10 @@ namespace BookShoppingCartMvcUI.Controllers
 
         public async Task<IActionResult> Check()
         {
-            bool isChecked = await _cartRepo.DoCheck();
+           /* bool isChecked = await _cartRepo.DoCheck();
 
             if (!isChecked)
-                throw new Exception("server side broke");
+                throw new Exception("server side broke");*/
             return RedirectToAction("Index", "Home");
 
         }

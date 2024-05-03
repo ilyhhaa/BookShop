@@ -34,6 +34,8 @@ namespace BookShoppingCartMvcUI.Models
         [Required]
         [MaxLength(30)]
         public string PaymentMethod { get; set; }
+
+        public bool isPaid { get; set; }
         public OrderStatus OrderStatus { get; set; }
 
          public List<OrderDetail> OrderDetail { get; set; }

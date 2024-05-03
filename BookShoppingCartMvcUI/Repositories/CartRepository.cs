@@ -159,7 +159,7 @@ namespace BookShoppingCartMvcUI.Repositories
             return data.Count;
         }
         
-        public async Task<bool> DoCheck()
+        public async Task<bool> DoCheck(CheckoutModel model)
         {
             using var transaction = _db.Database.BeginTransaction();
 
