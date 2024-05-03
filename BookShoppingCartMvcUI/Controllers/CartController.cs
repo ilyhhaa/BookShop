@@ -41,14 +41,31 @@ namespace BookShoppingCartMvcUI.Controllers
             return Ok(cartItem);
         }
 
-        public async Task<IActionResult> Check()
+        public IActionResult Check()
         {
-           /* bool isChecked = await _cartRepo.DoCheck();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Check(CheckoutModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+           bool isChecked = await _cartRepo.DoCheck(model);
 
             if (!isChecked)
-                throw new Exception("server side broke");*/
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(OrderFailure));
+            return RedirectToAction(nameof(OrderSuccess));
 
+        }
+
+        public IActionResult OrderSuccess()
+        {
+            return View();
+        }
+
+        public IActionResult OrderFailure()
+        {
+            return View();
         }
     }
 }

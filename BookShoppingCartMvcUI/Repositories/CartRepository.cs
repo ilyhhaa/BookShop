@@ -178,12 +178,23 @@ namespace BookShoppingCartMvcUI.Repositories
                 {
                     throw new Exception("Cart is Empty");
                 }
+                var pendingRecord = _db.orderStatuses.FirstOrDefault(s => s.StatusName == "Pending");
+                if (pendingRecord is null) 
+                {
+                    throw new Exception("Order status does not have pending status");
+                }
 
                 var order = new Order
                 {
                     UserId = userId,
                     CreatedDate = DateTime.UtcNow,
-                    OrderStatusId = 1,
+                    Name=model.Name,
+                    Email=model.Email,
+                    MobileNumber=model.MobileNumber,
+                    PaymentMethod=model.PaymentMethod,
+                    Address=model.Address,
+                    isPaid=false,
+                    OrderStatusId = pendingRecord.Id
 
                 };
                 _db.Orders.Add(order);
