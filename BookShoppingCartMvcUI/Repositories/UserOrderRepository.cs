@@ -17,24 +17,38 @@ namespace BookShoppingCartMvcUI.Repositories
             _userManager = userManager;
         }
 
-        public Task ChangeOrderStatus(UpdateOrderStatusModel data)
+        public async Task ChangeOrderStatus(UpdateOrderStatusModel data)
         {
-            throw new NotImplementedException();
+            var order = await _db.Orders.FindAsync(data.OrderId);
+
+            if (order == null) 
+            {
+                throw new InvalidOperationException($"order with id {data.OrderId} does not found");
+            }
+            order.OrderStatusId = data.OrderStatusId;
+            await _db.SaveChangesAsync();
         }
 
-        public Task<Order?> GetOrderById(int id)
+        public async Task<Order?> GetOrderById(int id)
         {
-            throw new NotImplementedException();
+            return await _db.Orders.FindAsync(id);
         }
 
-        public Task<IEnumerable<OrderStatus>> GetOrderStatuses()
+        public async Task<IEnumerable<OrderStatus>> GetOrderStatuses()
         {
-            throw new NotImplementedException();
+            return await _db.orderStatuses.ToListAsync();
         }
 
-        public Task TogglePaymentStatus(int orderId)
+        public async Task TogglePaymentStatus(int orderId)
         {
-            throw new NotImplementedException();
+            var order = await _db.Orders.FindAsync(orderId);
+
+            if (order == null)
+            {
+                throw new InvalidOperationException($"order with id:{orderId} does not found");
+            }
+            order.isPaid= !order.isPaid;
+            await _db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Order>> UserOrders(bool getAll = false)
