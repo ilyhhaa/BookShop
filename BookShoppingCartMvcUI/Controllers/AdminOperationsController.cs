@@ -62,4 +62,38 @@ public class AdminOperationsController : Controller
 
         return View(data);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdatePaymentStatus(UpdateOrderStatusModel data)
+
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                data.OrderStatusList = (await _userOrderRepository.GetOrderStatuses()).Select(orderstatus =>
+                {
+                    return new SelectListItem
+                    {
+                        Value = orderstatus.Id.ToString(),
+                        Text = orderstatus.StatusName,
+                        Selected = orderstatus.Id == data.OrderStatusId
+                    };
+                });
+                return View(data);
+            }
+            await _userOrderRepository.ChangeOrderStatus(data);
+            TempData["msg"] = "Updated successfully";
+        }
+        catch (Exception ex)
+        {
+            TempData["msg"] = "Something went wrong";
+        }
+
+        return RedirectToAction(nameof(UpdatePaymentStatus), new { orderId = data.OrderId });
+    }
+    
+
+
 }
+
