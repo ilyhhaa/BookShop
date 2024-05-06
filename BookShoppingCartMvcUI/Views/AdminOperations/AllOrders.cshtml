@@ -15,7 +15,7 @@
             <th>OrderDate</th>
             <th>Name</th>
             <th>Email</th>
-            <th>MobileNo</th>
+            <th>MobileNumber</th>
             <th>Address</th>
             <th>PaymentStatus</th>
             <th>OrderStatus</th>
@@ -27,6 +27,16 @@
             <tr>
                <td>@item.CreatedDate.ToString("dd-MM-yyyy")</td>
                <td>@item.Name</td>
+                <td>@item.Email</td>
+                <td>@item.MobileNumber</td>
+                <td>@item.Address</td>
+                <td>@item.PaymentMethod|@(item.isPaid?"Paid":"Not Paid")</td>
+                <td>@item.OrderStatus.StatusName</td>
+                <td>
+                    <button type="button" class="btn btn-primary">Order-Detail</button>
+                    <a asp-action="UpdatePaymentStatus" asp-route-orderId="@item.Id" class="btn btn-info">Change Order Status</a>
+                    <a asp-action="TogglePaymentStatus" asp-route-orderId="@item.Id" class="btn btn-info">Toggle Payment Status</a>
+                </td>
             </tr>
         }
 
