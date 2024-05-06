@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "AllOrders";
+}
+
+<div style=" width:100%" class="mt-2"></div>
+
+<h4>Orders </h4>
+
+@if(Model !=null && Model.Count() > 0)
+{
+    <table class="table-striped">
+
+        <tr>
+            <th>OrderDate</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>MobileNo</th>
+            <th>Address</th>
+            <th>PaymentStatus</th>
+            <th>OrderStatus</th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+               <td>@item.CreatedDate.ToString("dd-MM-yyyy")</td>
+               <td>@item.Name</td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <h5>No Orders</h5>
+}
+<h1>AllOrders</h1>
+
+
