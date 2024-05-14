@@ -34,7 +34,7 @@ public class AdminOperationsController : Controller
         return RedirectToAction(nameof(AllOrders));
     }
 
-    public async Task<IActionResult> UpdatePaymentStatus(int orderId)
+    public async Task<IActionResult> UpdateOrderStatus(int orderId)
     {
         var order = await _userOrderRepository.GetOrderById(orderId);
 
@@ -64,7 +64,7 @@ public class AdminOperationsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdatePaymentStatus(UpdateOrderStatusModel data)
+    public async Task<IActionResult> UpdateOrderStatus(UpdateOrderStatusModel data)
 
     {
         try
@@ -90,7 +90,7 @@ public class AdminOperationsController : Controller
             TempData["msg"] = "Something went wrong";
         }
 
-        return RedirectToAction(nameof(UpdatePaymentStatus), new { orderId = data.OrderId });
+        return RedirectToAction(nameof(UpdateOrderStatus), new { orderId = data.OrderId });
     }
     
 

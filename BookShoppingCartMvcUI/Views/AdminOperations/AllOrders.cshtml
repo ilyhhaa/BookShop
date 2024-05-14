@@ -34,7 +34,7 @@
                 <td>@item.OrderStatus.StatusName</td>
                 <td>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#modal-@item.Id"> class="btn btn-primary">Order-Detail</button>
-                    <a asp-action="UpdatePaymentStatus" asp-route-orderId="@item.Id" class="btn btn-info">Change Order Status</a>
+                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@item.Id" class="btn btn-info">Change Order Status</a>
                     <a asp-action="TogglePaymentStatus" asp-route-orderId="@item.Id" class="btn btn-info">Toggle Payment Status</a>
 
                     @*nodal div*@
