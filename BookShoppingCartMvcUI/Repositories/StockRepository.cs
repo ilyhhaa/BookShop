@@ -2,7 +2,7 @@
 
 namespace BookShoppingCartMvcUI.Repositories
 {
-    public class StockRepository
+    public class StockRepository:IStockRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -13,6 +13,20 @@ namespace BookShoppingCartMvcUI.Repositories
 
         public async Task<Stock?>GetStockByBookId(int bookId)=> await _context.Stocks.FirstOrDefaultAsync(a=>a.BookId == bookId);
 
+        public async Task ManageStock(StockDTO stockToManage)
+        {
+          var existingstock = await GetStockByBookId(stockToManage.BookId);
+            if (existingstock is null) 
+            {
+                var stock = new Stock { BookId = stockToManage.BookId, Quantity = stockToManage.Quantity };
+                _context.Stocks.Add(stock);
+            }
+            else
+            {
+                existingstock.Quantity = stockToManage.Quantity;
+            }
+            await _context.SaveChangesAsync();
+        }
         public async Task<IEnumerable<StockDisplayModel>>GetStocks(string sTerm = "")
         {
             var stocks = await (from book in _context.Books
