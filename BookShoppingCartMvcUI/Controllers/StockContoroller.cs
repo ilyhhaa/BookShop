@@ -30,7 +30,7 @@ namespace BookShoppingCartMvcUI.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> Managestock(StockDTO stock)
+        public async Task <IActionResult> ManageStock(StockDTO stock)
         {
             if (!ModelState.IsValid)
             {
