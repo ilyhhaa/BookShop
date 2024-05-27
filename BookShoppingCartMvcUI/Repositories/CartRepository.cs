@@ -21,12 +21,10 @@ namespace BookShoppingCartMvcUI.Repositories
             string userId = GetUserId();
             using var transaction = _db.Database.BeginTransaction();
             try {
-                
+
 
                 if (string.IsNullOrEmpty(userId))
-                    throw new Exception("user is not logged-in");
-
-
+                    throw new UnauthorizedAccessException("user is not logged-in");
 
                 var cart = await GetCart(userId);
                 if (cart is null)
@@ -78,21 +76,21 @@ namespace BookShoppingCartMvcUI.Repositories
 
 
                 if (string.IsNullOrEmpty(userId))
-                    throw new Exception("User is not loggged-in");
+                    throw new UnauthorizedAccessException("user is not logged-in");
 
 
 
                 var cart = await GetCart(userId);
                 if (cart is null)
                 {
-                    throw new Exception("Invaalid cart");
+                    throw new InvalidOperationException("Invalid cart");
                 }
 
                 var cartItem = _db.CartDetails.FirstOrDefault(x => x.ShoppingCartId == cart.Id && x.BookId == bookId);
 
                 if (cartItem is null)
                 {
-                    throw new Exception("Not items in cart ");
+                    throw new InvalidOperationException("Not items in cart ");
                 }
 
                 else if (cartItem.Quantity == 1)
@@ -125,11 +123,14 @@ namespace BookShoppingCartMvcUI.Repositories
 
             if(userId == null)
             {
-                throw new Exception("Invalid userid");
+                throw new InvalidOperationException("Invalid userid");
             }
             var shoppingCart = await _db.ShoppingCarts
                                        .Include(x => x.CartsDetails)
                                        .ThenInclude(x => x.Book)
+                                       .ThenInclude(x=>x.Stock)
+                                       .Include(x=>x.CartsDetails)
+                                       .ThenInclude(x=>x.Book)
                                        .ThenInclude(x => x.Genre)
                                        .Where(a => a.UserId == userId).FirstOrDefaultAsync();
             return shoppingCart;
@@ -167,21 +168,21 @@ namespace BookShoppingCartMvcUI.Repositories
             {
                 var userId = GetUserId();
                 if (string.IsNullOrEmpty(userId))
-                    throw new Exception("User is not logged-in");
+                    throw new UnauthorizedAccessException("User is not logged-in");
                 var cart = await GetCart(userId);
                 if (cart is null)
-                throw new Exception("Invalid cart");
+                throw new InvalidOperationException("Invalid cart");
 
                 var cartDetail = _db.CartDetails.Where(c => c.ShoppingCartId == cart.Id).ToList();
 
                 if (cartDetail.Count == 0)
                 {
-                    throw new Exception("Cart is Empty");
+                    throw new InvalidOperationException("Cart is Empty");
                 }
                 var pendingRecord = _db.orderStatuses.FirstOrDefault(s => s.StatusName == "Pending");
                 if (pendingRecord is null) 
                 {
-                    throw new Exception("Order status does not have pending status");
+                    throw new InvalidOperationException("Order status does not have pending status");
                 }
 
                 var order = new Order
@@ -210,8 +211,20 @@ namespace BookShoppingCartMvcUI.Repositories
                     };
                     _db.OrderDetails.Add(orderDetail);
 
+                    var stock=await _db.Stocks.FirstOrDefaultAsync(a=>a.BookId==item.BookId);
+                    if(stock == null)
+                    {
+                        throw new InvalidOperationException("Stock is null");
+                    }
+                    if(item.Quantity>stock.Quantity)
+                    {
+                        throw new InvalidOperationException($"Only {stock.Quantity} item(s) are available in the stock");
+                    }
+
+                    stock.Quantity -= item.Quantity;
+
                 }
-                _db.SaveChanges();
+                 _db.SaveChanges();
 
                 _db.CartDetails.RemoveRange(cartDetail);
                 _db.SaveChanges();
